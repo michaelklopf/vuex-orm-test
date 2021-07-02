@@ -5,7 +5,7 @@
 <script>
 import CommentsMain from "./CommentsMain.vue";
 import { useRoute } from "vue-router";
-import { ref } from "vue";
+import { computed } from "vue";
 import Post from "../models/post.js";
 
 export default {
@@ -14,7 +14,6 @@ export default {
     },
 
     setup() {
-        let post = ref();
         const route = useRoute();
         const id = route.params.id;
 
@@ -32,9 +31,11 @@ export default {
                         comments: result.getDataFromResponse(),
                     },
                 });
-
-                post.value = Post.query().whereId(id).with("comments").first();
             });
+
+        const post = computed(() => {
+            return Post.query().whereId(id).with("comments").first();
+        });
 
         return { post };
     },
